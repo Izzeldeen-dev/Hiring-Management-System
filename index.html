@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Manager Hiring System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: #2c3e50;
+            color: white;
+            padding: 0;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header {
+            padding: 25px 20px;
+            background: #34495e;
+            border-bottom: 1px solid #4a5f7a;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: #34495e;
+            border-left-color: #3498db;
+        }
+
+        .nav-icon {
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .content-header {
+            background: white;
+            padding: 25px 30px;
+            border-bottom: 1px solid #e9ecef;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .content-header h2 {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .content-header p {
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+
+        .content-body {
+            padding: 30px;
+        }
+
+        /* Dashboard Cards */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+            border-left: 5px solid;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .dashboard-card.primary { border-left-color: #3498db; }
+        .dashboard-card.success { border-left-color: #27ae60; }
+        .dashboard-card.warning { border-left-color: #f39c12; }
+        .dashboard-card.danger { border-left-color: #e74c3c; }
+
+        .card-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            color: #6c757d;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .card-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .card-subtitle {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        /* Tables */
+        .data-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .table-header {
+            background: #f8f9fa;
+            padding: 20px 25px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px 25px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-new { background: #e3f2fd; color: #1976d2; }
+        .status-scheduled { background: #fff3e0; color: #f57c00; }
+        .status-interviewed { background: #f3e5f5; color: #7b1fa2; }
+        .status-hired { background: #e8f5e8; color: #388e3c; }
+        .status-rejected { background: #ffebee; color: #d32f2f; }
+
+        /* Forms */
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6c757d;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Hidden sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>Hiring System</h1>
+                <p>Account Manager Recruitment</p>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active" data-section="dashboard">
+                            <span class="nav-icon">📊</span>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-section="candidates">
+                            <span class="nav-icon">👥</span>
+                            Candidates
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-section="interviews">
+                            <span class="nav-icon">📝</span>
+                            Interviews
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-section="calculator">
+                            <span class="nav-icon">🧮</span>
+                            Score Calculator
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-section="reports">
+                            <span class="nav-icon">📈</span>
+                            Reports
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-section="settings">
+                            <span class="nav-icon">⚙️</span>
+                            Settings
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <div class="content-header">
+                    <h2>Dashboard</h2>
+                    <p>Overview of your hiring pipeline</p>
+                </div>
+                <div class="content-body">
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card primary">
+                            <div class="card-header">
+                                <div class="card-title">Total Candidates</div>
+                            </div>
+                            <div class="card-value" id="totalCandidates">24</div>
+                            <div class="card-subtitle">+3 this week</div>
+                        </div>
+                        <div class="dashboard-card warning">
+                            <div class="card-header">
+                                <div class="card-title">Pending Interviews</div>
+                            </div>
+                            <div class="card-value" id="pendingInterviews">7</div>
+                            <div class="card-subtitle">2 scheduled today</div>
+                        </div>
+                        <div class="dashboard-card success">
+                            <div class="card-header">
+                                <div class="card-title">Hired This Month</div>
+                            </div>
+                            <div class="card-value" id="hiredThisMonth">3</div>
+                            <div class="card-subtitle">Target: 5</div>
+                        </div>
+                        <div class="dashboard-card danger">
+                            <div class="card-header">
+                                <div class="card-title">Average Score</div>
+                            </div>
+                            <div class="card-value" id="averageScore">76%</div>
+                            <div class="card-subtitle">+2% vs last month</div>
+                        </div>
+                    </div>
+
+                    <div class="data-table">
+                        <div class="table-header">
+                            <h3 class="table-title">Recent Candidates</h3>
+                            <button class="btn btn-primary" onclick="openModal('addCandidateModal')">
+                                + Add Candidate
+                            </button>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Applied</th>
+                                    <th>Status</th>
+                                    <th>Score</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="candidatesTable">
+                                <tr>
+                                    <td>Sarah Johnson</td>
+                                    <td>sarah.j@email.com</td>
+                                    <td>Dec 28, 2024</td>
+                                    <td><span class="status-badge status-interviewed">Interviewed</span></td>
+                                    <td>85%</td>
+                                    <td>
+                                        <button class="btn btn-primary" onclick="viewCandidate('sarah-johnson')">View</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Michael Chen</td>
+                                    <td>m.chen@email.com</td>
+                                    <td>Dec 27, 2024</td>
+                                    <td><span class="status-badge status-scheduled">Scheduled</span></td>
+                                    <td>-</td>
+                                    <td>
+                                        <button class="btn btn-primary" onclick="viewCandidate('michael-chen')">View</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Emily Rodriguez</td>
+                                    <td>emily.r@email.com</td>
+                                    <td>Dec 26, 2024</td>
+                                    <td><span class="status-badge status-hired">Hired</span></td>
+                                    <td>92%</td>
+                                    <td>
+                                        <button class="btn btn-primary" onclick="viewCandidate('emily-rodriguez')">View</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>David Park</td>
+                                    <td>d.park@email.com</td>
+                                    <td>Dec 25, 2024</td>
+                                    <td><span class="status-badge status-new">New</span></td>
+                                    <td>-</td>
+                                    <td>
+                                        <button class="btn btn-primary" onclick="viewCandidate('david-park')">View</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Candidates Section -->
+            <section id="candidates" class="content-section">
+                <div class="content-header">
+                    <h2>Candidates</h2>
+                    <p>Manage all candidate profiles and applications</p>
+                </div>
+                <div class="content-body">
+                    <div class="data-table">
+                        <div class="table-header">
+                            <h3 class="table-title">All Candidates</h3>
+                            <div>
+                                <button class="btn btn-primary" onclick="openModal('addCandidateModal')">
+                                    + Add Candidate
+                                </button>
+                            </div>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Applied Date</th>
+                                    <th>Status</th>
+                                    <th>Score</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="allCandidatesTable">
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Interviews Section -->
+            <section id="interviews" class="content-section">
+                <div class="content-header">
+                    <h2>Interviews</h2>
+                    <p>Schedule and manage interviews</p>
+                </div>
+                <div class="content-body">
+                    <div class="data-table">
+                        <div class="table-header">
+                            <h3 class="table-title">Upcoming Interviews</h3>
+                            <button class="btn btn-primary" onclick="openModal('scheduleInterviewModal')">
+                                + Schedule Interview
+                            </button>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Candidate</th>
+                                    <th>Date & Time</th>
+                                    <th>Interviewer</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="interviewsTable">
+                                <tr>
+                                    <td>Michael Chen</td>
+                                    <td>Dec 30, 2024 - 2:00 PM</td>
+                                    <td>John Smith</td>
+                                    <td>Technical</td>
+                                    <td><span class="status-badge status-scheduled">Scheduled</span></td>
+                                    <td>
+                                        <button class="btn btn-primary">Conduct</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>David Park</td>
+                                    <td>Dec 31, 2024 - 10:00 AM</td>
+                                    <td>Sarah Wilson</td>
+                                    <td>Cultural Fit</td>
+                                    <td><span class="status-badge status-scheduled">Scheduled</span></td>
+                                    <td>
+                                        <button class="btn btn-primary">Conduct</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Calculator Section -->
+            <section id="calculator" class="content-section">
+                <div class="content-header">
+                    <h2>Interview Calculator</h2>
+                    <p>Score candidates using our standardized assessment</p>
+                </div>
+                <div class="content-body">
+                    <div class="form-container">
+                        <div style="text-align: center; padding: 40px;">
+                            <h3 style="color: #2c3e50; margin-bottom: 15px;">Interview Calculator</h3>
+                            <p style="color: #6c757d; margin-bottom: 25px;">Your existing calculator will be integrated here</p>
+                            <button class="btn btn-primary" onclick="openCalculator()">
+                                🧮 Open Calculator
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="content-section">
+                <div class="content-header">
+                    <h2>Reports & Analytics</h2>
+                    <p>Track hiring performance and trends</p>
+                </div>
+                <div class="content-body">
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card primary">
+                            <div class="card-title">Hire Rate</div>
+                            <div class="card-value">12.5%</div>
+                            <div class="card-subtitle">3 hired / 24 candidates</div>
+                        </div>
+                        <div class="dashboard-card success">
+                            <div class="card-title">Avg. Time to Hire</div>
+                            <div class="card-value">18 days</div>
+                            <div class="card-subtitle">2 days faster than goal</div>
+                        </div>
+                        <div class="dashboard-card warning">
+                            <div class="card-title">Interview Completion</div>
+                            <div class="card-value">87%</div>
+                            <div class="card-subtitle">3 candidates pending</div>
+                        </div>
+                        <div class="dashboard-card danger">
+                            <div class="card-title">Quality Score</div>
+                            <div class="card-value">A-</div>
+                            <div class="card-subtitle">Based on 90-day reviews</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="content-section">
+                <div class="content-header">
+                    <h2>Settings</h2>
+                    <p>Configure system preferences and users</p>
+                </div>
+                <div class="content-body">
+                    <div class="form-container">
+                        <h3 style="margin-bottom: 25px; color: #2c3e50;">System Settings</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Company Name</label>
+                                <input type="text" class="form-input" value="Your Company" id="companyName">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Hiring Manager Email</label>
+                                <input type="email" class="form-input" value="manager@company.com" id="managerEmail">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Minimum Passing Score</label>
+                                <input type="number" class="form-input" value="80" id="passingScore">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Time Zone</label>
+                                <select class="form-input" id="timeZone">
+                                    <option>UTC-5 (Eastern)</option>
+                                    <option>UTC-6 (Central)</option>
+                                    <option>UTC-7 (Mountain)</option>
+                                    <option>UTC-8 (Pacific)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn btn-success">Save Settings</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Candidate Modal -->
+    <div id="addCandidateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Candidate</h3>
+                <button class="close-btn" onclick="closeModal('addCandidateModal')">&times;</button>
+            </div>
+            <form id="addCandidateForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" class="form-input" required id="candidateName">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email *</label>
+                        <input type="email" class="form-input" required id="candidateEmail">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone</label>
+                        <input type="tel" class="form-input" id="candidatePhone">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">LinkedIn</label>
+                        <input type="url" class="form-input" id="candidateLinkedIn">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Resume/Notes</label>
+                    <textarea class="form-input form-textarea" id="candidateNotes" placeholder="Add notes about the candidate..."></textarea>
+                </div>
+                <div style="margin-top: 25px; text-align: right;">
+                    <button type="button" class="btn" onclick="closeModal('addCandidateModal')" style="background: #6c757d; color: white; margin-right: 10px;">Cancel</button>
+                    <button type="submit" class="btn btn-success">Add Candidate</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Schedule Interview Modal -->
+    <div id="scheduleInterviewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Schedule Interview</h3>
+                <button class="close-btn" onclick="closeModal('scheduleInterviewModal')">&times;</button>
+            </div>
+            <form id="scheduleInterviewForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Candidate *</label>
+                        <select class="form-input" required id="interviewCandidate">
+                            <option value="">Select candidate...</option>
+                            <option value="michael-chen">Michael Chen</option>
+                            <option value="david-park">David Park</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Interview Type *</label>
+                        <select class="form-input" required id="interviewType">
+                            <option value="">Select type...</option>
+                            <option value="cultural">Cultural Fit</option>
+                            <option value="technical">Technical Assessment</option>
+                            <option value="scenario">Role-Play Scenario</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Date *</label>
+                        <input type="date" class="form-input" required id="interviewDate">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Time *</label>
+                        <input type="time" class="form-input" required id="interviewTime">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Interviewer *</label>
+                        <input type="text" class="form-input" required id="interviewer">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Duration (minutes)</label>
+                        <input type="number" class="form-input" value="60" id="interviewDuration">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Notes</label>
+                    <textarea class="form-input form-textarea" id="interviewNotes" placeholder="Special instructions or notes..."></textarea>
+                </div>
+                <div style="margin-top: 25px; text-align: right;">
+                    <button type="button" class="btn" onclick="closeModal('scheduleInterviewModal')" style="background: #6c757d; color: white; margin-right: 10px;">Cancel</button>
+                    <button type="submit" class="btn btn-success">Schedule Interview</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Data Storage (In production, this would be a real database)
+        let candidates = [
+            {
+                id: 'sarah-johnson',
+                name: 'Sarah Johnson',
+                email: 'sarah.j@email.com',
+                phone: '+1 (555) 123-4567',
+                applied: '2024-12-28',
+                status: 'interviewed',
+                score: 85,
+                notes: 'Strong background in content marketing'
+            },
+            {
+                id: 'michael-chen',
+                name: 'Michael Chen',
+                email: 'm.chen@email.com',
+                phone: '+1 (555) 234-5678',
+                applied: '2024-12-27',
+                status: 'scheduled',
+                score: null,
+                notes: 'Excellent communication skills'
+            },
+            {
+                id: 'emily-rodriguez',
+                name: 'Emily Rodriguez',
+                email: 'emily.r@email.com',
+                phone: '+1 (555) 345-6789',
+                applied: '2024-12-26',
+                status: 'hired',
+                score: 92,
+                notes: 'Outstanding performance across all assessments'
+            },
+            {
+                id: 'david-park',
+                name: 'David Park',
+                email: 'd.park@email.com',
+                phone: '+1 (555) 456-7890',
+                applied: '2024-12-25',
+                status: 'new',
+                score: null,
+                notes: 'Recent graduate with strong potential'
+            }
+        ];
+
+        let interviews = [
+            {
+                id: 1,
+                candidateId: 'michael-chen',
+                candidateName: 'Michael Chen',
+                date: '2024-12-30',
+                time: '14:00',
+                interviewer: 'John Smith',
+                type: 'technical',
+                status: 'scheduled'
+            },
+            {
+                id: 2,
+                candidateId: 'david-park',
+                candidateName: 'David Park',
+                date: '2024-12-31',
+                time: '10:00',
+                interviewer: 'Sarah Wilson',
+                type: 'cultural',
+                status: 'scheduled'
+            }
+        ];
+
+        // Navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navigation
+            const navLinks = document.querySelectorAll('.nav-link');
+            const contentSections = document.querySelectorAll('.content-section');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all nav links
+                    navLinks.forEach(nav => nav.classList.remove('active'));
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Hide all content sections
+                    contentSections.forEach(section => section.classList.remove('active'));
+                    
+                    // Show selected section
+                    const targetSection = this.getAttribute('data-section');
+                    document.getElementById(targetSection).classList.add('active');
+                    
+                    // Load section-specific data
+                    loadSectionData(targetSection);
+                });
+            });
+
+            // Load initial data
+            loadSectionData('dashboard');
+            populateAllCandidatesTable();
+
+            // Form submissions
+            document.getElementById('addCandidateForm').addEventListener('submit', addCandidate);
+            document.getElementById('scheduleInterviewForm').addEventListener('submit', scheduleInterview);
+        });
+
+        // Load data for specific sections
+        function loadSectionData(section) {
+            switch(section) {
+                case 'dashboard':
+                    updateDashboardStats();
+                    break;
+                case 'candidates':
+                    populateAllCandidatesTable();
+                    break;
+                case 'interviews':
+                    populateInterviewsTable();
+                    break;
+            }
+        }
+
+        // Update dashboard statistics
+        function updateDashboardStats() {
+            document.getElementById('totalCandidates').textContent = candidates.length;
+            document.getElementById('pendingInterviews').textContent = interviews.length;
+            document.getElementById('hiredThisMonth').textContent = candidates.filter(c => c.status === 'hired').length;
+            
+            const scoredCandidates = candidates.filter(c => c.score !== null);
+            const avgScore = scoredCandidates.length > 0 
+                ? Math.round(scoredCandidates.reduce((sum, c) => sum + c.score, 0) / scoredCandidates.length)
+                : 0;
+            document.getElementById('averageScore').textContent = avgScore + '%';
+        }
+
+        // Populate candidates table
+        function populateAllCandidatesTable() {
+            const tableBody = document.getElementById('allCandidatesTable');
+            tableBody.innerHTML = '';
+
+            candidates.forEach(candidate => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${candidate.name}</td>
+                    <td>${candidate.email}</td>
+                    <td>${candidate.phone || 'N/A'}</td>
+                    <td>${formatDate(candidate.applied)}</td>
+                    <td><span class="status-badge status-${candidate.status}">${formatStatus(candidate.status)}</span></td>
+                    <td>${candidate.score ? candidate.score + '%' : '-'}</td>
+                    <td>
+                        <button class="btn btn-primary" onclick="viewCandidate('${candidate.id}')">View</button>
+                        <button class="btn btn-success" onclick="openModal('scheduleInterviewModal')" style="margin-left: 5px;">Interview</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Populate interviews table
+        function populateInterviewsTable() {
+            const tableBody = document.getElementById('interviewsTable');
+            tableBody.innerHTML = '';
+
+            interviews.forEach(interview => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${interview.candidateName}</td>
+                    <td>${formatDate(interview.date)} - ${formatTime(interview.time)}</td>
+                    <td>${interview.interviewer}</td>
+                    <td>${formatInterviewType(interview.type)}</td>
+                    <td><span class="status-badge status-${interview.status}">${formatStatus(interview.status)}</span></td>
+                    <td>
+                        <button class="btn btn-primary" onclick="conductInterview('${interview.id}')">Conduct</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Add new candidate
+        function addCandidate(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const newCandidate = {
+                id: generateId(),
+                name: document.getElementById('candidateName').value,
+                email: document.getElementById('candidateEmail').value,
+                phone: document.getElementById('candidatePhone').value,
+                applied: new Date().toISOString().split('T')[0],
+                status: 'new',
+                score: null,
+                notes: document.getElementById('candidateNotes').value
+            };
+
+            candidates.push(newCandidate);
+            closeModal('addCandidateModal');
+            e.target.reset();
+            
+            // Refresh displays
+            updateDashboardStats();
+            populateAllCandidatesTable();
+            
+            // Show success message
+            showNotification('Candidate added successfully!', 'success');
+        }
+
+        // Schedule interview
+        function scheduleInterview(e) {
+            e.preventDefault();
+            
+            const newInterview = {
+                id: interviews.length + 1,
+                candidateId: document.getElementById('interviewCandidate').value,
+                candidateName: getCandidateName(document.getElementById('interviewCandidate').value),
+                date: document.getElementById('interviewDate').value,
+                time: document.getElementById('interviewTime').value,
+                interviewer: document.getElementById('interviewer').value,
+                type: document.getElementById('interviewType').value,
+                status: 'scheduled'
+            };
+
+            interviews.push(newInterview);
+            closeModal('scheduleInterviewModal');
+            e.target.reset();
+            
+            // Update candidate status
+            const candidate = candidates.find(c => c.id === newInterview.candidateId);
+            if (candidate) {
+                candidate.status = 'scheduled';
+            }
+            
+            // Refresh displays
+            updateDashboardStats();
+            populateInterviewsTable();
+            populateAllCandidatesTable();
+            
+            showNotification('Interview scheduled successfully!', 'success');
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // View candidate details
+        function viewCandidate(candidateId) {
+            const candidate = candidates.find(c => c.id === candidateId);
+            if (candidate) {
+                alert(`Candidate Details:\n\nName: ${candidate.name}\nEmail: ${candidate.email}\nPhone: ${candidate.phone}\nStatus: ${formatStatus(candidate.status)}\nScore: ${candidate.score || 'Not scored'}\nNotes: ${candidate.notes}`);
+            }
+        }
+
+        // Conduct interview
+        function conductInterview(interviewId) {
+            const interview = interviews.find(i => i.id == interviewId);
+            if (interview) {
+                alert(`Conducting interview with ${interview.candidateName}\n\nType: ${formatInterviewType(interview.type)}\nScheduled: ${formatDate(interview.date)} at ${formatTime(interview.time)}\n\nThis would open the interview calculator.`);
+                
+                // In a real system, this would open the calculator with the candidate's data pre-filled
+                openCalculator();
+            }
+        }
+
+        // Open calculator (placeholder)
+        function openCalculator() {
+            alert('Opening Interview Calculator...\n\nThis would load your existing calculator interface with the candidate data pre-filled.');
+            // In the real system, this would navigate to the calculator or open it in a modal
+        }
+
+        // Utility functions
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+
+        function formatTime(timeString) {
+            const [hours, minutes] = timeString.split(':');
+            const date = new Date();
+            date.setHours(parseInt(hours), parseInt(minutes));
+            return date.toLocaleTimeString('en-US', { 
+                hour: 'numeric', 
+                minute: '2-digit',
+                hour12: true 
+            });
+        }
+
+        function formatStatus(status) {
+            const statusMap = {
+                'new': 'New',
+                'scheduled': 'Scheduled',
+                'interviewed': 'Interviewed',
+                'hired': 'Hired',
+                'rejected': 'Rejected'
+            };
+            return statusMap[status] || status;
+        }
+
+        function formatInterviewType(type) {
+            const typeMap = {
+                'cultural': 'Cultural Fit',
+                'technical': 'Technical',
+                'scenario': 'Role-Play Scenario'
+            };
+            return typeMap[type] || type;
+        }
+
+        function getCandidateName(candidateId) {
+            const candidate = candidates.find(c => c.id === candidateId);
+            return candidate ? candidate.name : 'Unknown';
+        }
+
+        function showNotification(message, type = 'info') {
+            // Simple notification system
+            const notification = document.createElement('div');
+            notification.innerHTML = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#27ae60' : '#3498db'};
+                color: white;
+                padding: 15px 25px;
+                border-radius: 8px;
+                z-index: 2000;
+                font-weight: 600;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Auto-save data to localStorage (simple persistence)
+        function saveData() {
+            localStorage.setItem('hiringSystemCandidates', JSON.stringify(candidates));
+            localStorage.setItem('hiringSystemInterviews', JSON.stringify(interviews));
+        }
+
+        function loadData() {
+            const savedCandidates = localStorage.getItem('hiringSystemCandidates');
+            const savedInterviews = localStorage.getItem('hiringSystemInterviews');
+            
+            if (savedCandidates) {
+                candidates = JSON.parse(savedCandidates);
+            }
+            
+            if (savedInterviews) {
+                interviews = JSON.parse(savedInterviews);
+            }
+        }
+
+        // Load saved data on page load
+        window.addEventListener('load', function() {
+            loadData();
+            updateDashboardStats();
+            populateAllCandidatesTable();
+        });
+
+        // Auto-save every 30 seconds
+        setInterval(saveData, 30000);
+
+        // Save data when page is closed
+        window.addEventListener('beforeunload', saveData);
+
+        // Close modals when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        // Set minimum date for interview scheduling to today
+        document.getElementById('interviewDate').min = new Date().toISOString().split('T')[0];
+    </script>
+</body>
+</html>
